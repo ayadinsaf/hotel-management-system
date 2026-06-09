@@ -160,6 +160,27 @@ et Prisma génère les requêtes.
     est équivalent à :
     SELECT * FROM bookings WHERE status = 'CONFIRMED'
 
+### Migration de base de données
+Une migration traduit le schéma Prisma en tables SQL réelles.
+Elle génère un fichier SQL versionné dans le repo.
+
+    npx prisma migrate dev --name init    crée et applique la migration
+    npx prisma migrate deploy             applique les migrations en production
+
+Chaque migration s'applique une seule fois. Prisma garde l'historique
+dans la base (`_prisma_migrations`) et dans `src/prisma/migrations/`.
+Si le schéma change, on crée une nouvelle migration — on ne modifie
+jamais une migration déjà appliquée.
+
+### binaryTargets Prisma
+Prisma génère un binaire natif adapté à l'OS cible.
+Si on développe sur Mac et qu'on déploie dans Docker Linux,
+il faut déclarer les deux cibles dans le schema :
+
+    binaryTargets = ["native", "linux-musl-arm64-openssl-3.0.x"]
+
+Sans ça, l'app plante dans le container avec une erreur de binaire introuvable.
+
 ---
 
 ## 4. Concepts DevOps

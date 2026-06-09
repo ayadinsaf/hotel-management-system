@@ -65,21 +65,22 @@ Active epic: docs/epics/epic-00-poc.md
 
 ## Current state
 
-### US-000 — Project setup (in progress)
-Created:
-- poc/Dockerfile
+### US-000 — Project setup (done)
+All files created and verified:
+- poc/Dockerfile (openssl added, binaryTargets declared)
 - poc/docker-compose.yml
-- poc/package.json
-- poc/src/prisma/schema.prisma
+- poc/package.json (prisma schema path declared)
+- poc/src/prisma/schema.prisma (binaryTargets for Mac + Docker)
+- poc/src/prisma/migrations/ (init migration applied)
 - poc/.env.example
 - poc/src/index.js
 - poc/src/middleware/auth.js
+- poc/src/routes/rooms.js (stub)
+- poc/src/routes/guests.js (stub)
+- poc/src/routes/bookings.js (stub)
+- poc/src/routes/dashboard.js (stub)
 
-Missing:
-- poc/.gitignore
-- npm install not run yet
-- database not migrated yet
-- app not tested yet
+App running: docker compose up -d → /health returns {"status":"ok"}
 
 ### US-001 — Login (in progress)
 Created:
@@ -95,9 +96,12 @@ Not started.
 
 ## Next steps
 
-1. Finish US-000: add .gitignore, run npm install, migrate database
-2. Finish US-001: test login end to end
-3. US-002: rooms routes
+1. Finish US-001: a receptionist can log in with email and password
+2. US-002: a receptionist can create a room
+3. US-003: a receptionist can create a guest profile
+4. US-004: a receptionist can create a booking for a guest
+5. US-005: a receptionist can view the list of current bookings
+6. US-006: a receptionist can cancel a booking
 
 ## Learning resources
 

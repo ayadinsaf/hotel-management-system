@@ -133,10 +133,31 @@ graph TB
 subgraph docker-compose
 APP[container app\nNode.js :3000]
 DB[container db\nPostgreSQL :5432]
+VOL[(volume\npostgres_data)]
 end
-APP --> DB
-DEV[développeur] --> APP
-DEV --> DB
+APP -->|DATABASE_URL| DB
+DB -->|persistance| VOL
+DEV[développeur\nlocalhost] -->|curl :3000| APP
+DEV -->|prisma studio :5555| DB
+```
+
+---
+
+## 8b. Flux de migration Prisma
+
+```mermaid
+sequenceDiagram
+participant Dev as Développeur
+participant Schema as schema.prisma
+participant Prisma as Prisma CLI
+participant DB as PostgreSQL
+
+Dev->>Schema: modifie le schéma
+Dev->>Prisma: prisma migrate dev --name init
+Prisma->>Schema: lit les modèles
+Prisma->>DB: compare avec l'état actuel
+Prisma->>DB: applique le SQL généré
+Prisma-->>Dev: migrations/ créé et appliqué
 ```
 
 ---

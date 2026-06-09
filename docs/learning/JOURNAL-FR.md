@@ -350,6 +350,81 @@ Schéma : voir DIAGRAMS-FR.md — Docker Compose setup local
 
 ---
 
+## Étape 18 — Installation de Docker Desktop
+
+Docker Desktop est l'application macOS qui fait tourner le daemon Docker.
+Sans elle, les commandes `docker` et `docker compose` ne fonctionnent pas.
+
+Installation : télécharger depuis docker.com et lancer l'app.
+Vérification : `docker info` doit afficher la version du client.
+
+**Tips :**
+- Docker Desktop doit être lancé (icône dans la barre de menu) avant
+  d'utiliser les commandes docker
+- Sur Mac Apple Silicon (M1/M2/M3), Docker tourne dans une VM Linux légère
+  — c'est pour ça que les images Linux fonctionnent sur macOS
+
+---
+
+## Étape 19 — Préparation de l'app pour le démarrage
+
+Trois corrections nécessaires avant de pouvoir lancer l'app :
+
+**1. Déclaration du chemin du schema Prisma**
+Prisma cherche son schema à `prisma/schema.prisma` par défaut.
+Notre schema est dans `src/prisma/schema.prisma`.
+Il faut le déclarer dans `package.json` :
+
+    "prisma": { "schema": "src/prisma/schema.prisma" }
+
+**2. Routes stubs**
+`src/index.js` importe 5 fichiers de routes. Seul `auth.js` existait.
+Sans les autres, l'app plante au démarrage avec `Cannot find module`.
+On crée des fichiers vides pour `rooms`, `guests`, `bookings`, `dashboard`.
+Ils seront implémentés dans US-002 à US-006.
+
+**3. binaryTargets Prisma**
+Prisma génère un binaire natif adapté à l'OS.
+Le Mac utilise `native`, le container Linux arm64 sur Docker utilise
+`linux-musl-arm64-openssl-3.0.x`. Sans les déclarer tous les deux,
+l'app plante dans Docker car le bon binaire est absent.
+
+    binaryTargets = ["native", "linux-musl-arm64-openssl-3.0.x"]
+
+**Tips :**
+- Alpine Linux est ultra-léger mais n'inclut pas OpenSSL par défaut
+  Ajouter `RUN apk add --no-cache openssl` dans le Dockerfile
+- Quand on change les binaryTargets, il faut reconstruire l'image
+  Docker entièrement avec `docker compose down -v && docker compose up --build`
+  Le `-v` supprime les volumes — nécessaire pour vider le cache de node_modules
+
+---
+
+## Étape 20 — Lancement de l'environnement local
+
+    docker compose up -d          démarre PostgreSQL et l'app Node.js
+    npx prisma migrate dev --name init   crée les tables en base
+
+Résultat : l'app répond `{"status":"ok"}` sur `http://localhost:3000/health`.
+
+Tables créées par la migration : `Staff`, `Room`, `Guest`, `Booking`.
+
+La migration génère un fichier SQL dans `src/prisma/migrations/` —
+il est versionné dans le repo. C'est la trace de toute l'évolution
+du schéma de base de données.
+
+**Tips :**
+- `docker compose up -d` : le `-d` lance en arrière-plan (detached)
+  Sans `-d`, les logs s'affichent dans le terminal et Ctrl+C arrête tout
+- `docker compose logs -f app` : voir les logs de l'app en temps réel
+- `docker compose down` : arrête les containers (les données survivent)
+- `docker compose down -v` : arrête ET supprime les volumes (données perdues)
+  À utiliser uniquement pour repartir de zéro
+- Une migration ne s'applique qu'une fois — Prisma garde l'historique
+  Si on remodifie le schema, on crée une nouvelle migration
+
+---
+
 ## Étape 17 — Implémentation de l'authentification
 
 Fichiers créés :
