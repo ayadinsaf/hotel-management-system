@@ -65,20 +65,39 @@ Active epic: docs/epics/epic-00-poc.md
 
 ## Current state
 
-Completed:
-- Full documentation structure (docs/)
-- VISION, INITIATIVES, ROADMAP, UX, SYSTEM architecture
-- Agent team configured: PM and Backend (prompts, contexts, harness)
-- POC skeleton: Prisma schema, Docker, docker-compose, package.json
-- Auth: routes, controller, service, JWT middleware
+### US-000 — Project setup (in progress)
+Created:
+- poc/Dockerfile
+- poc/docker-compose.yml
+- poc/package.json
+- poc/src/prisma/schema.prisma
+- poc/.env.example
+- poc/src/index.js
+- poc/src/middleware/auth.js
 
-In progress:
-- US-002 — rooms routes
+Missing:
+- poc/.gitignore
+- npm install not run yet
+- database not migrated yet
+- app not tested yet
 
-Next:
-- poc/src/routes/rooms.js
-- poc/src/controllers/roomController.js
-- poc/src/services/roomService.js
+### US-001 — Login (in progress)
+Created:
+- poc/src/routes/auth.js
+- poc/src/controllers/authController.js
+- poc/src/services/authService.js
+
+Missing:
+- not tested yet
+
+### US-002 to US-006
+Not started.
+
+## Next steps
+
+1. Finish US-000: add .gitignore, run npm install, migrate database
+2. Finish US-001: test login end to end
+3. US-002: rooms routes
 
 ## Learning resources
 
