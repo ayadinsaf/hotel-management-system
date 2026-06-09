@@ -13,15 +13,16 @@ Full context: docs/product/VISION.md
 
 ## Repository structure
 
-    services/        microservices (auth, hotels, bookings, guests)
-    frontend/        staff app and booking site
-    data/            pipelines and dbt models
+    poc/             single app POC (phase 0 — current)
+    services/        microservices (phase 1+)
+    frontend/        staff app and booking site (phase 2+)
+    data/            pipelines and dbt models (phase 5+)
     infra/           docker-compose and CI/CD
     docs/            all documentation
 
 ## Agent team
 
-Six specialized agents collaborate on this project.
+Seven specialized agents collaborate on this project.
 Full team definition: docs/agents/TEAM.md
 
 ### Invoking an agent
@@ -61,3 +62,27 @@ Full architecture: docs/architecture/SYSTEM.md
 
 Phase 0 — POC
 Active epic: docs/epics/epic-00-poc.md
+
+## Current state
+
+Completed:
+- Full documentation structure (docs/)
+- VISION, INITIATIVES, ROADMAP, UX, SYSTEM architecture
+- Agent team configured: PM and Backend (prompts, contexts, harness)
+- POC skeleton: Prisma schema, Docker, docker-compose, package.json
+- Auth: routes, controller, service, JWT middleware
+
+In progress:
+- US-002 — rooms routes
+
+Next:
+- poc/src/routes/rooms.js
+- poc/src/controllers/roomController.js
+- poc/src/services/roomService.js
+
+## Learning resources
+
+    docs/learning/CONCEPTS-FR.md    concepts and definitions
+    docs/learning/DIAGRAMS-FR.md    visual flow diagrams
+    docs/learning/JOURNAL-FR.md     chronological project log
+    docs/learning/TIPS-FR.md        practical tips and best practices
