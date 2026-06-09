@@ -59,5 +59,5 @@ Full architecture: docs/architecture/SYSTEM.md
 
 ## Current phase
 
-Phase 1 — Core microservices foundations
-Active epic: docs/epics/epic-01-foundations.md
+Phase 0 — POC
+Active epic: docs/epics/epic-00-poc.md

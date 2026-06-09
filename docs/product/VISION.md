@@ -32,7 +32,8 @@ Users: hotel manager, revenue manager
 
 ## Roadmap
 
-Phase 1 — Core microservices (auth, hotels, bookings, guests)
+Phase 0 — POC: single app, one database, core booking flow visible
+Phase 1 — Microservices foundations (auth, hotels, bookings, guests)
 Phase 2 — Staff app frontend
 Phase 3 — Event-driven architecture
 Phase 4 — Booking site
