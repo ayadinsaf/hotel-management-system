@@ -19,7 +19,8 @@
     "jsonwebtoken": "^9.0.0"
   },
   "prisma": {
-    "schema": "src/prisma/schema.prisma"
+    "schema": "src/prisma/schema.prisma",
+    "seed": "node src/prisma/seed.js"
   },
   "devDependencies": {
     "jest": "^29.0.0",

@@ -425,6 +425,38 @@ du schéma de base de données.
 
 ---
 
+## Étape 21 — Test du login (US-001)
+
+Pour tester une route qui écrit ou lit en base, il faut des données.
+On crée un script de seed : un fichier qui insère des utilisateurs de test
+avec un mot de passe haché via bcrypt.
+
+Fichier créé : `poc/src/prisma/seed.js`
+Déclaré dans `package.json` : `"seed": "node src/prisma/seed.js"`
+Commande : `npx prisma db seed`
+
+Deux utilisateurs créés :
+- `manager@hotel.com` — rôle MANAGER
+- `reception@hotel.com` — rôle RECEPTIONIST
+- mot de passe commun : `password123`
+
+Test du login :
+
+    curl -X POST http://localhost:3000/api/v1/auth/login \
+      -H "Content-Type: application/json" \
+      -d '{"email": "reception@hotel.com", "password": "password123"}'
+
+Réponse : token JWT + infos staff (sans mot de passe).
+
+**Tips :**
+- `upsert` = insert OR update — permet de relancer le seed sans erreur de doublon
+- Coller le token sur jwt.io pour voir son contenu décodé — utile pour débugger
+- Le mot de passe n'est jamais retourné dans la réponse — vérifier ça dans chaque route
+- Prisma Studio (`npx prisma studio` depuis `poc/`) permet de voir les données
+  en temps réel sans écrire de SQL
+
+---
+
 ## Étape 17 — Implémentation de l'authentification
 
 Fichiers créés :

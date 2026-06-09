@@ -82,14 +82,14 @@ All files created and verified:
 
 App running: docker compose up -d → /health returns {"status":"ok"}
 
-### US-001 — Login (in progress)
-Created:
+### US-001 — Login (done)
+A receptionist can log in with email and password.
 - poc/src/routes/auth.js
 - poc/src/controllers/authController.js
 - poc/src/services/authService.js
+- poc/src/prisma/seed.js (test users)
 
-Missing:
-- not tested yet
+Tested: POST /api/v1/auth/login returns JWT token + staff info.
 
 ### US-002 to US-006
 Not started.
