@@ -107,6 +107,7 @@ Not started.
 3. US-004: a receptionist can create a booking for a guest
 4. US-005: a receptionist can view the list of current bookings
 5. US-006: a receptionist can cancel a booking
+6. US-007: frontend POC — React web, Login + Dashboard, accessible depuis navigateur mobile
 
 ## Learning resources
 
