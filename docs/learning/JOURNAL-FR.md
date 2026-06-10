@@ -600,3 +600,70 @@ Cas d'erreur testés :
 - La soustraction de deux objets Date en JavaScript retourne
   une différence en millisecondes — diviser par 1000 * 60 * 60 * 24
   pour obtenir des jours
+
+## Étape 25 — Liste des réservations en cours (US-005)
+
+Première route GET du projet sur les réservations.
+Pas de body — la réponse est construite entièrement depuis la base.
+
+Fichiers modifiés :
+
+    poc/src/services/bookingService.js        ajout de getActiveBookings
+    poc/src/controllers/bookingController.js  ajout de getActiveBookingsHandler
+    poc/src/routes/bookings.js                ajout de GET /
+
+Logique métier dans le service :
+- Filtrer sur status IN (CONFIRMED, CHECKED_IN) — les réservations actives
+- Inclure les données de la chambre (number, type) et du client (firstName, lastName, email)
+- Trier par checkIn ascendant — les plus proches en premier
+
+Incident rencontré :
+La ligne require était dupliquée dans bookingController.js après l'ajout
+de getActiveBookings. Node.js a lancé "Identifier already declared".
+Correction : fusionner les deux lignes require en une seule.
+
+Autre incident : le seed n'avait pas été rejoué après un redémarrage
+des containers. Les données de test avaient disparu — la structure
+(tables) persiste, les données non. Correction : npx prisma db seed.
+
+**Tips :**
+- findMany retourne un tableau — même si la base est vide, la réponse
+  est [] et non une erreur
+- orderBy: { checkIn: 'asc' } — toujours trier une liste destinée
+  à un humain, pas de liste dans un ordre arbitraire
+- Les données de seed disparaissent si le volume Docker est supprimé
+  La structure (migrations) persiste, les données non
+
+## Étape 26 — Annulation d'une réservation (US-006)
+
+Première route PATCH du projet. On ne supprime pas la réservation —
+on change son statut à CANCELLED pour conserver l'historique.
+
+Fichiers modifiés :
+
+    poc/src/services/bookingService.js        ajout de cancelBooking
+    poc/src/controllers/bookingController.js  ajout de cancelBookingHandler
+    poc/src/routes/bookings.js                ajout de PATCH /:id/cancel
+
+Logique métier dans le service :
+1. Vérifier que la réservation existe → 404 si non
+2. Vérifier que le statut est CONFIRMED ou CHECKED_IN → 400 si déjà
+   CANCELLED ou CHECKED_OUT
+3. Mettre à jour le statut à CANCELLED avec prisma.booking.update()
+
+Pourquoi PATCH et non DELETE :
+DELETE supprime la ressource. PATCH modifie partiellement une ressource.
+Annuler une réservation, c'est changer son statut — pas la supprimer.
+L'historique des réservations annulées doit être conservé.
+
+Cas testés :
+- Annulation d'une réservation CONFIRMED → 200, status CANCELLED
+- Double annulation → 400, message explicite avec le statut actuel
+
+**Tips :**
+- prisma.booking.update() met à jour updatedAt automatiquement
+  grâce au @updatedAt dans le schéma — pas besoin de le gérer manuellement
+- Le message d'erreur inclut le statut actuel : plus utile pour le debug
+  qu'un message générique
+- PATCH /:id/cancel est plus lisible que PATCH /:id avec un body
+  { status: 'CANCELLED' } — l'intention est claire dans l'URL

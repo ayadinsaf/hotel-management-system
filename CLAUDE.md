@@ -117,13 +117,18 @@ A receptionist can view the list of active bookings (CONFIRMED or CHECKED_IN).
 
 Tested: GET /api/v1/bookings returns active bookings with room and guest info.
 
-### US-006
-Not started.
+### US-006 — Cancel a booking (done)
+A receptionist can cancel an existing booking.
+- poc/src/services/bookingService.js (cancelBooking added)
+- poc/src/controllers/bookingController.js (cancelBookingHandler added)
+- poc/src/routes/bookings.js (PATCH /:id/cancel added)
+
+Tested: PATCH /api/v1/bookings/:id/cancel returns updated booking with status CANCELLED.
+Double cancel returns 400 with explicit error message.
 
 ## Next steps
 
-1. US-006: a receptionist can cancel a booking
-2. US-007: frontend POC — React web, Login + Dashboard, accessible depuis navigateur mobile
+1. US-007: frontend POC — React web, Login + Dashboard, accessible depuis navigateur mobile
 
 ## Learning resources
 
