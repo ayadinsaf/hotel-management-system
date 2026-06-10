@@ -109,14 +109,21 @@ A receptionist can create a booking for a guest.
 - poc/src/controllers/bookingController.js
 - poc/src/routes/bookings.js
 
-### US-005 to US-006
+### US-005 — List current bookings (done)
+A receptionist can view the list of active bookings (CONFIRMED or CHECKED_IN).
+- poc/src/services/bookingService.js (getActiveBookings added)
+- poc/src/controllers/bookingController.js (getActiveBookingsHandler added)
+- poc/src/routes/bookings.js (GET / added)
+
+Tested: GET /api/v1/bookings returns active bookings with room and guest info.
+
+### US-006
 Not started.
 
 ## Next steps
 
-1. US-005: a receptionist can view the list of current bookings
-2. US-006: a receptionist can cancel a booking
-3. US-007: frontend POC — React web, Login + Dashboard, accessible depuis navigateur mobile
+1. US-006: a receptionist can cancel a booking
+2. US-007: frontend POC — React web, Login + Dashboard, accessible depuis navigateur mobile
 
 ## Learning resources
 
