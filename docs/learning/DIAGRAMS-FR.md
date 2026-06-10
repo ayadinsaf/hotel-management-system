@@ -210,3 +210,23 @@ DBT --> SF[Snowflake\nEntrepôt de données]
 SF --> MB[Metabase\nDashboards]
 SF --> ML[Modèles ML\nPricing]
 ```
+
+## 12. Flux de création d'une chambre (US-002)
+
+```mermaid
+sequenceDiagram
+participant C as Client
+participant R as routes/rooms.js
+participant CT as roomController.js
+participant SV as roomService.js
+participant DB as PostgreSQL
+
+C->>R: POST /api/v1/rooms (number, type, capacity, rate)
+R->>CT: createRoomHandler(req, res)
+CT->>CT: extrait req.body
+CT->>SV: createRoom({ number, type, capacity, rate })
+SV->>DB: prisma.room.create()
+DB-->>SV: room créée (id, status, timestamps)
+SV-->>CT: room
+CT-->>C: 201 Created { room }
+```

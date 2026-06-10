@@ -109,6 +109,22 @@ Flux exemple pour POST /api/v1/auth/login :
             ↓
     réponse JSON            token + infos staff
 
+### Codes HTTP de réponse
+
+Le code HTTP dans la réponse indique le résultat de la requête.
+
+    200   OK                  requête traitée, réponse retournée
+    201   Created             ressource créée avec succès
+    400   Bad Request         données invalides envoyées par le client
+    401   Unauthorized        non authentifié
+    403   Forbidden           authentifié mais pas autorisé
+    404   Not Found           ressource introuvable
+    409   Conflict            conflit — ex. doublon sur un champ unique
+    500   Internal Server Error  erreur côté serveur
+
+Utiliser le bon code rend l'API lisible pour les clients
+et les outils de monitoring.
+
 ### Middleware
 Une fonction qui s'exécute entre la requête et le handler de route.
 Utilisée pour l'authentification, les logs, la gestion des erreurs, etc.

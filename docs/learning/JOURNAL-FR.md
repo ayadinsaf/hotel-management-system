@@ -484,3 +484,42 @@ Schéma : voir DIAGRAMS-FR.md — Flux d'une requête authentifiée
   Le token porte l'id utilisateur, le rôle et l'expiration
 - Ne jamais stocker les mots de passe en clair
   bcrypt les hache de façon irréversible avant de les stocker
+
+## Étape 22 — Création d'une chambre (US-002)
+
+Première route CRUD du projet. Pas de logique métier complexe —
+l'objectif est d'ancrer le pattern Route / Controller / Service
+avant d'attaquer les réservations.
+
+Fichiers créés :
+
+    poc/src/services/roomService.js        logique d'insertion en base
+    poc/src/controllers/roomController.js  extraction req.body, réponse HTTP
+    poc/src/routes/rooms.js                remplacement du stub US-000
+
+Le flux complet :
+
+    POST /api/v1/rooms
+      → index.js monte le router sur /api/v1/rooms
+      → routes/rooms.js branche POST / sur createRoomHandler
+      → roomController.js extrait number, type, capacity, rate
+      → roomService.js appelle prisma.room.create()
+      → Prisma insère en base et retourne l'objet créé
+
+Champs envoyés : number, type, capacity, rate.
+Champs gérés automatiquement : id (uuid), status (AVAILABLE), createdAt, updatedAt.
+
+Cas d'erreur testés :
+- Doublon sur number → Prisma retourne "Unique constraint failed"
+- Type invalide (hors enum RoomType) → Prisma retourne "Invalid value for argument type"
+
+**Tips :**
+- Le service ne sait pas qu'il y a une requête HTTP — il reçoit un objet,
+  il insère, il retourne. C'est ce qui le rend réutilisable depuis
+  un seed, un test, ou une autre partie du code.
+- Le controller ne touche jamais Prisma directement — toujours passer
+  par le service.
+- Le code HTTP 201 signifie "ressource créée" — différent du 200 "ok".
+  Utiliser le bon code rend l'API plus lisible pour les clients.
+- prisma.room.create() — Prisma expose les modèles en minuscule.
+  Le modèle s'appelle Room dans le schéma, on l'appelle via prisma.room.
