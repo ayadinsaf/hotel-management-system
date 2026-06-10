@@ -91,17 +91,22 @@ A receptionist can log in with email and password.
 
 Tested: POST /api/v1/auth/login returns JWT token + staff info.
 
-### US-002 to US-006
+### US-002 — Create a room (done)
+A receptionist can create a room.
+- poc/src/services/roomService.js
+- poc/src/controllers/roomController.js
+- poc/src/routes/rooms.js
+
+### US-003 to US-006
 Not started.
 
 ## Next steps
 
-1. Finish US-001: a receptionist can log in with email and password
-2. US-002: a receptionist can create a room
-3. US-003: a receptionist can create a guest profile
-4. US-004: a receptionist can create a booking for a guest
-5. US-005: a receptionist can view the list of current bookings
-6. US-006: a receptionist can cancel a booking
+1. US-002: a receptionist can create a room
+2. US-003: a receptionist can create a guest profile
+3. US-004: a receptionist can create a booking for a guest
+4. US-005: a receptionist can view the list of current bookings
+5. US-006: a receptionist can cancel a booking
 
 ## Learning resources
 
