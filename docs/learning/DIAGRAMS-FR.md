@@ -254,3 +254,34 @@ DB-->>SV: guest créé (id, timestamps)
 SV-->>CT: guest
 CT-->>C: 201 Created { guest }
 ```
+
+## 14. Flux de création d'une réservation (US-004)
+
+```mermaid
+sequenceDiagram
+participant C as Client
+participant CT as bookingController.js
+participant SV as bookingService.js
+participant DB as PostgreSQL
+
+C->>CT: POST /api/v1/bookings (roomId, guestId, checkIn, checkOut)
+CT->>CT: vérifie champs obligatoires
+CT-->>C: 400 Bad Request (si champ manquant)
+CT->>SV: createBooking({ roomId, guestId, checkIn, checkOut })
+SV->>SV: vérifie checkOut > checkIn
+SV-->>CT: 400 (si dates incohérentes)
+SV->>DB: prisma.room.findUnique(roomId)
+DB-->>SV: room ou null
+SV-->>CT: 404 Room not found (si null)
+SV->>DB: prisma.guest.findUnique(guestId)
+DB-->>SV: guest ou null
+SV-->>CT: 404 Guest not found (si null)
+SV->>DB: prisma.booking.findFirst (chevauchement dates)
+DB-->>SV: conflit ou null
+SV-->>CT: 409 Room not available (si conflit)
+SV->>SV: calcule totalAmount (nuits × rate)
+SV->>DB: prisma.booking.create()
+DB-->>SV: booking créée
+SV-->>CT: booking (avec room et guest inclus)
+CT-->>C: 201 Created { booking }
+```

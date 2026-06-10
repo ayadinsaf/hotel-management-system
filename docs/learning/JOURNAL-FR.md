@@ -554,3 +554,49 @@ les codes d'erreur internes de Prisma.
   si on veut centraliser la gestion des erreurs plus tard
 - phone est optionnel dans le schéma (String?) — ne pas l'inclure
   dans la validation obligatoire du controller
+
+## Étape 24 — Création d'une réservation (US-004)
+
+User story la plus complexe du POC — elle implique deux relations
+(chambre et client) et de la logique métier sur les dates.
+
+Fichiers créés :
+
+    poc/src/services/bookingService.js
+    poc/src/controllers/bookingController.js
+    poc/src/routes/bookings.js              remplacement du stub US-000
+
+Logique métier dans le service :
+1. Valider que checkOut est après checkIn
+2. Vérifier que la chambre existe → 404 si non
+3. Vérifier que le client existe → 404 si non
+4. Détecter un chevauchement de dates sur la même chambre → 409 si conflit
+5. Calculer le totalAmount (nuits × rate)
+6. Créer la réservation avec include room et guest
+
+Détection de chevauchement :
+Deux périodes se chevauchent si :
+    existante.checkIn < nouvelle.checkOut
+    ET existante.checkOut > nouvelle.checkIn
+On ne cherche que les réservations CONFIRMED ou CHECKED_IN —
+une réservation CANCELLED ne bloque pas la disponibilité.
+
+Calcul du totalAmount :
+    const nights = Math.ceil((checkOutDate - checkInDate) / (1000 * 60 * 60 * 24))
+    const totalAmount = nights * room.rate
+
+Cas d'erreur testés :
+- checkOut avant checkIn → 400
+- Chambre introuvable → 404
+- Client introuvable → 404
+- Chevauchement de dates → 409
+
+**Tips :**
+- include dans Prisma joint les tables liées dans la même requête —
+  évite de faire plusieurs appels séparés pour récupérer
+  les données de la chambre et du client
+- Filtrer sur status: { in: ['CONFIRMED', 'CHECKED_IN'] } —
+  une réservation annulée ne doit pas bloquer de nouvelles réservations
+- La soustraction de deux objets Date en JavaScript retourne
+  une différence en millisecondes — diviser par 1000 * 60 * 60 * 24
+  pour obtenir des jours

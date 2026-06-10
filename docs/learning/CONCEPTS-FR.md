@@ -197,6 +197,22 @@ il faut déclarer les deux cibles dans le schema :
 
 Sans ça, l'app plante dans le container avec une erreur de binaire introuvable.
 
+### include et select — Prisma
+`include` demande à Prisma de joindre les tables liées dans la même requête.
+`select` à l'intérieur limite les champs retournés.
+
+    prisma.booking.create({
+      data: { ... },
+      include: {
+        room: { select: { number: true, type: true, rate: true } },
+        guest: { select: { firstName: true, lastName: true, email: true } },
+      }
+    })
+
+Sans include, Prisma retourne uniquement les IDs des relations.
+Avec include, les données sont jointes directement dans la réponse —
+pas besoin de faire plusieurs appels séparés.
+
 ---
 
 ## 4. Concepts DevOps
