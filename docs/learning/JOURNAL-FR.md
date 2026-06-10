@@ -523,3 +523,34 @@ Cas d'erreur testés :
   Utiliser le bon code rend l'API plus lisible pour les clients.
 - prisma.room.create() — Prisma expose les modèles en minuscule.
   Le modèle s'appelle Room dans le schéma, on l'appelle via prisma.room.
+
+## Étape 23 — Création d'un profil client (US-003)
+
+Même pattern que US-002. Pas de nouveau concept —
+l'objectif est d'ancrer la mécanique Route / Controller / Service
+sur un deuxième cas concret.
+
+Fichiers créés :
+
+    poc/src/services/guestService.js        logique d'insertion en base
+    poc/src/controllers/guestController.js  extraction req.body, réponse HTTP
+    poc/src/routes/guests.js                remplacement du stub US-000
+
+Le modèle Guest existait déjà dans le schéma Prisma et la migration
+était déjà appliquée — pas de nouvelle migration nécessaire.
+
+Cas d'erreur testés :
+- Doublon sur email → service vérifie en amont avec findUnique → 409
+- Champs obligatoires manquants → controller valide → 400
+
+Pourquoi vérifier l'email dans le service plutôt que laisser Prisma échouer :
+Prisma lancerait une erreur générique P2002 sur la contrainte @unique.
+En vérifiant en amont avec findUnique, on retourne un 409 explicite
+avec un message lisible. Le controller n'a pas à connaître
+les codes d'erreur internes de Prisma.
+
+**Tips :**
+- L'erreur Prisma sur un @unique est P2002 — utile à connaître
+  si on veut centraliser la gestion des erreurs plus tard
+- phone est optionnel dans le schéma (String?) — ne pas l'inclure
+  dans la validation obligatoire du controller

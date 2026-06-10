@@ -97,17 +97,21 @@ A receptionist can create a room.
 - poc/src/controllers/roomController.js
 - poc/src/routes/rooms.js
 
-### US-003 to US-006
+### US-003 — Create a guest profile (done)
+A receptionist can create a guest profile.
+- poc/src/services/guestService.js
+- poc/src/controllers/guestController.js
+- poc/src/routes/guests.js
+
+### US-004 to US-006
 Not started.
 
 ## Next steps
 
-1. US-002: a receptionist can create a room
-2. US-003: a receptionist can create a guest profile
-3. US-004: a receptionist can create a booking for a guest
-4. US-005: a receptionist can view the list of current bookings
-5. US-006: a receptionist can cancel a booking
-6. US-007: frontend POC — React web, Login + Dashboard, accessible depuis navigateur mobile
+1. US-004: a receptionist can create a booking for a guest
+2. US-005: a receptionist can view the list of current bookings
+3. US-006: a receptionist can cancel a booking
+4. US-007: frontend POC — React web, Login + Dashboard, accessible depuis navigateur mobile
 
 ## Learning resources
 

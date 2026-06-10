@@ -230,3 +230,27 @@ DB-->>SV: room créée (id, status, timestamps)
 SV-->>CT: room
 CT-->>C: 201 Created { room }
 ```
+
+## 13. Flux de création d'un profil client (US-003)
+
+```mermaid
+sequenceDiagram
+participant C as Client
+participant R as routes/guests.js
+participant CT as guestController.js
+participant SV as guestService.js
+participant DB as PostgreSQL
+
+C->>R: POST /api/v1/guests (firstName, lastName, email, phone?)
+R->>CT: createGuestHandler(req, res)
+CT->>CT: vérifie firstName, lastName, email présents
+CT-->>C: 400 Bad Request (si champ manquant)
+CT->>SV: createGuest({ firstName, lastName, email, phone })
+SV->>DB: prisma.guest.findUnique({ where: { email } })
+DB-->>SV: guest existant ou null
+SV-->>CT: 409 Conflict (si email déjà utilisé)
+SV->>DB: prisma.guest.create()
+DB-->>SV: guest créé (id, timestamps)
+SV-->>CT: guest
+CT-->>C: 201 Created { guest }
+```
