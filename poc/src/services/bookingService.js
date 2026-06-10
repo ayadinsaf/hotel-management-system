@@ -78,4 +78,31 @@ async function getActiveBookings() {
   return bookings;
 }
 
-module.exports = { createBooking, getActiveBookings };
+async function cancelBooking(id) {
+  const booking = await prisma.booking.findUnique({ where: { id } });
+
+  if (!booking) {
+    const error = new Error('Booking not found');
+    error.status = 404;
+    throw error;
+  }
+
+  if (booking.status === 'CANCELLED' || booking.status === 'CHECKED_OUT') {
+    const error = new Error(`Booking cannot be cancelled (status: ${booking.status})`);
+    error.status = 400;
+    throw error;
+  }
+
+  const updated = await prisma.booking.update({
+    where: { id },
+    data: { status: 'CANCELLED' },
+    include: {
+      room: { select: { number: true, type: true } },
+      guest: { select: { firstName: true, lastName: true, email: true } },
+    },
+  });
+
+  return updated;
+}
+
+module.exports = { createBooking, getActiveBookings, cancelBooking };
