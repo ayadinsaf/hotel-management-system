@@ -1,4 +1,4 @@
-const { createBooking } = require('../services/bookingService');
+const { createBooking, getActiveBookings } = require('../services/bookingService');
 
 async function createBookingHandler(req, res) {
   const { roomId, guestId, checkIn, checkOut } = req.body;
@@ -16,4 +16,13 @@ async function createBookingHandler(req, res) {
   }
 }
 
-module.exports = { createBookingHandler };
+async function getActiveBookingsHandler(req, res) {
+  try {
+    const bookings = await getActiveBookings();
+    return res.status(200).json(bookings);
+  } catch (err) {
+    return res.status(500).json({ error: err.message });
+  }
+}
+
+module.exports = { createBookingHandler, getActiveBookingsHandler };

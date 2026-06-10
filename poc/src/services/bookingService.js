@@ -64,4 +64,18 @@ async function createBooking({ roomId, guestId, checkIn, checkOut }) {
   return booking;
 }
 
-module.exports = { createBooking };
+async function getActiveBookings() {
+  const bookings = await prisma.booking.findMany({
+    where: {
+      status: { in: ['CONFIRMED', 'CHECKED_IN'] },
+    },
+    include: {
+      room: { select: { number: true, type: true } },
+      guest: { select: { firstName: true, lastName: true, email: true } },
+    },
+    orderBy: { checkIn: 'asc' },
+  });
+  return bookings;
+}
+
+module.exports = { createBooking, getActiveBookings };
