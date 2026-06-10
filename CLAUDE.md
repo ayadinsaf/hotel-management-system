@@ -126,9 +126,15 @@ A receptionist can cancel an existing booking.
 Tested: PATCH /api/v1/bookings/:id/cancel returns updated booking with status CANCELLED.
 Double cancel returns 400 with explicit error message.
 
+### Dashboard summary endpoint (done)
+GET /api/v1/dashboard returns active bookings count and available rooms count.
+- poc/src/services/dashboardService.js
+- poc/src/controllers/dashboardController.js
+- poc/src/routes/dashboard.js
+
 ## Next steps
 
-1. US-007: frontend POC — React web, Login + Dashboard, accessible depuis navigateur mobile
+1. US-007: frontend POC — React + Vite + Tailwind CSS, Login + Dashboard, mobile-first
 
 ## Learning resources
 

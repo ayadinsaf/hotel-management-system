@@ -667,3 +667,26 @@ Cas testés :
   qu'un message générique
 - PATCH /:id/cancel est plus lisible que PATCH /:id avec un body
   { status: 'CANCELLED' } — l'intention est claire dans l'URL
+
+## Étape 27 — Résumé dashboard backend
+
+Route GET /api/v1/dashboard — retourne le nombre de réservations
+actives et le nombre de chambres disponibles.
+
+Fichiers créés :
+
+    poc/src/services/dashboardService.js        getDashboardSummary
+    poc/src/controllers/dashboardController.js  getDashboardSummaryHandler
+    poc/src/routes/dashboard.js                 GET / (remplacement du stub)
+
+Même pattern Route / Controller / Service que US-002 à US-006.
+
+Nouveauté : prisma.count() — retourne uniquement le nombre de résultats
+correspondant au filtre, sans charger les objets. Plus léger que
+findMany().length quand on n'a pas besoin des données.
+
+**Tips :**
+- Utiliser count() plutôt que findMany() quand on veut juste un chiffre
+- Le statut des chambres n'est pas mis à jour automatiquement à la
+  création d'une réservation — c'est un choix délibéré pour le POC,
+  à implémenter en phase 1
